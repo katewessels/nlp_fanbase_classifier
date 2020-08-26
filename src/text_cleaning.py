@@ -47,29 +47,28 @@ def remove_accents(input_str):
     return only_ascii.decode()
 
 #tokenize and get stem of each word. see which stemmer is preferred
-def tokenize(text):
-    stemmer = SnowballStemmer('english')
-    # stemmer = PorterStemmer()
-    # stemmer = WordNetLemmatizer()
-    return [stemmer.stem(word) for word in word_tokenize(text.lower())]
+# def tokenize(text):
+#     stemmer = SnowballStemmer('english')
+#     # stemmer = PorterStemmer()
+#     # stemmer = WordNetLemmatizer()
+#     return [stemmer.stem(word) for word in word_tokenize(text.lower())]
 
 #get rid of accents, punctuation, make lowercase
-def filter_data(corpus):
-    X = corpus.copy()
-    punctuation = string.punctuation
-    stop_words = set(stopwords.words('english'))
-    stemmer = SnowballStemmer('english')
-    for i in range(len(X)):
-        #get unicode data
-        X[i] = remove_accents(X[i])
-        #get rid of punctuation and make lowercase
-        X[i] = X[i].translate(str.maketrans('', '', punctuation)).lower()
-        #make bag of words, without stop words
-        tokenized_words = [word for word in X[i].split() if word not in stop_words]
-        #get the stem of each word
-        X[i] = [stemmer.stem(word) for word in tokenized_words]
-
-    return X
+# def filter_data(corpus):
+#     X = corpus.copy()
+#     punctuation = string.punctuation
+#     stop_words = set(stopwords.words('english'))
+#     stemmer = SnowballStemmer('english')
+#     for i in range(len(X)):
+#         #get unicode data
+#         X[i] = remove_accents(X[i])
+#         #get rid of punctuation and make lowercase
+#         X[i] = X[i].translate(str.maketrans('', '', punctuation)).lower()
+#         #make bag of words, without stop words
+#         tokenized_words = [word for word in X[i].split() if word not in stop_words]
+#         #get the stem of each word
+#         X[i] = [stemmer.stem(word) for word in tokenized_words]
+#     return X
 
 def filter_data_text(text):
     X = text
@@ -168,13 +167,14 @@ if __name__ == "__main__":
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
 
     #filter X_train, tokenize words for each document
-    #never really use this. just have it in case needed
-    X_train_filtered = filter_data(X_train)
+    # X_train_filtered = filter_data(X_train)
+    X_train_tokens = [filter_data_text(doc) for doc in X_train]
+    X_test_tokens = [filter_data_text(doc) for doc in X_test]
 
     #count vectorizer: tf
     #use filter_data_text function as tokenizer
     #fit to X_train
-    tf = CountVectorizer(tokenizer=filter_data_text)
+    tf = CountVectorizer(tokenizer=filter_data_text, max_features=5000)
     document_tf_matrix = tf.fit_transform(X_train).todense()
     #feature names
     tf_feature_names = tf.get_feature_names()
@@ -184,10 +184,10 @@ if __name__ == "__main__":
     #tfidf vectorizer: tf-idf
     #use filter_data_text function as tokenizer
     #fit to X_train
-    tfidf = TfidfVectorizer(tokenizer=filter_data_text)
+    tfidf = TfidfVectorizer(tokenizer=filter_data_text, max_features=5000)
     document_tfidf_matrix = tfidf.fit_transform(X_train).todense()
     #feature names
-    tidff_feature_names = tfidf.get_feature_names()
+    tfidf_feature_names = tfidf.get_feature_names()
     #vocabulary dictionary
     tfidf_vocabulary_dict = tfidf.vocabulary_
 
