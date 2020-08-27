@@ -180,6 +180,8 @@ if __name__ == "__main__":
     tf_feature_names = tf.get_feature_names()
     #vocabulary dictionary
     tf_vocabulary_dict = tf.vocabulary_
+    #df
+    tf_df = pd.DataFrame(document_tf_matrix, columns=tf.get_feature_names())
 
     #tfidf vectorizer: tf-idf
     #use filter_data_text function as tokenizer
@@ -190,6 +192,8 @@ if __name__ == "__main__":
     tfidf_feature_names = tfidf.get_feature_names()
     #vocabulary dictionary
     tfidf_vocabulary_dict = tfidf.vocabulary_
+    #df
+    tf_df = pd.DataFrame(document_tf_matrix, columns=tf.get_feature_names())
 
     #get top words across all documents/subreddits and plot
     top_words = get_top_n_words(X_train, n=100)

@@ -17,11 +17,13 @@ from nltk import pos_tag
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 from sklearn.metrics.pairwise import linear_kernel
 import operator
-from text_cleaning import get_data, get_X_y, filter_data, filter_data_text
+from text_cleaning import get_data, get_X_y, filter_data_text
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import KFold, train_test_split, cross_val_score
 from sklearn.metrics import accuracy_score, precision_score, recall_score, roc_curve, classification_report, roc_auc_score, make_scorer
 from sklearn.preprocessing import StandardScaler
+import statsmodels as sm
+from statsmodels.stats.outliers_influence import variance_inflation_factor
 
 #get dataframes
 df_gd, df_pf, df_phish, df_beatles, df = get_data()
@@ -62,39 +64,60 @@ scaled_test_tfidf_matrix = test_scaler.fit_transform(test_document_tfidf_matrix)
 # y_pred_proba = model.predict_proba(scaled_test_tf_matrix)
 
 ## LOGISTIC REGRESSION MODEL USING TF-IDF  VECTORIZER
+#model
 model = LogisticRegression(max_iter=1000, multi_class='multinomial')
 model.fit(scaled_tfidf_matrix, y_train)
+#predict
 y_pred = model.predict(scaled_test_tfidf_matrix)
 y_pred_proba = model.predict_proba(scaled_test_tfidf_matrix)
-
-## METRICS
-#accuracy score on test data
-accuracy = model.score(scaled_test_tfidf_matrix, y_test)
-#predicted classes for test data
-y_pred = model.predict(scaled_test_tfidf_matrix)
-#predicted probabilities for test data
-y_pred_proba = model.predict_proba(scaled_test_tfidf_matrix)
-#roc AUC score
+#metrics
+accuracy = accuracy_score(y_test, y_pred)
+recall = recall_score(y_test, y_pred, average='macro')
+precision = precision_score(y_test, y_pred, average='macro')
 auc = roc_auc_score(y_test, y_pred_proba, multi_class='ovr')
 #classification report
 report = classification_report(y_test, y_pred)
 
-###CROSS VALIDATE (default cv: stratified kfold (5-folds), which works for multi class)
-precision_scores = cross_val_score(model, scaled_tfidf_matrix, y_train, scoring=make_scorer(precision_score, average='macro'))
-accuracy_scores = cross_val_score(model, scaled_tfidf_matrix, y_train, scoring=make_scorer(accuracy_score))
-recall_scores = cross_val_score(model, scaled_tfidf_matrix, y_train, scoring=make_scorer(recall_score, average='macro'))
-auc_scores = cross_val_score(model, scaled_tfidf_matrix, y_train, scoring='roc_auc_ovr')
+#training subset predict
+train_y_pred = model.predict(document_tfidf_matrix)
+train_y_pred_proba = model.predict_proba(document_tfidf_matrix)
+train_accuracy = accuracy_score(y_train, train_y_pred)
+train_recall = recall_score(y_train, train_y_pred, average='macro')
+train_precision = precision_score(y_train, train_y_pred, average='macro')
+train_auc = roc_auc_score(y_train, train_y_pred_proba, multi_class='ovr')
 
-print(f'Training Mean CV Accuracy: {round(np.mean(accuracy_scores), 5)}')
-print(f'Training Mean CV Precision: {round(np.mean(precision_scores), 5)}')
-print(f'Training Mean CV Recall: {round(np.mean(recall_scores), 5)}')
-print(f'Training Mean CV AUC Score: {round(np.mean(auc_scores), 5)}')
+
+
+
+###CROSS VALIDATE (default cv: stratified kfold (5-folds), which works for multi class)
+# precision_scores = cross_val_score(model, scaled_tfidf_matrix, y_train, scoring=make_scorer(precision_score, average='macro'))
+# accuracy_scores = cross_val_score(model, scaled_tfidf_matrix, y_train, scoring=make_scorer(accuracy_score))
+# recall_scores = cross_val_score(model, scaled_tfidf_matrix, y_train, scoring=make_scorer(recall_score, average='macro'))
+# auc_scores = cross_val_score(model, scaled_tfidf_matrix, y_train, scoring='roc_auc_ovr')
+
+# print(f'Training Mean CV Accuracy: {round(np.mean(accuracy_scores), 5)}')
+# print(f'Training Mean CV Precision: {round(np.mean(precision_scores), 5)}')
+# print(f'Training Mean CV Recall: {round(np.mean(recall_scores), 5)}')
+# print(f'Training Mean CV AUC Score: {round(np.mean(auc_scores), 5)}')
+
+
+
+##TEST FOR HOMOSCEDASTICITY, NORMALITY AND MULTICOLLINEARITY
+#homoscedasticity
+# f_statistic, p_value, _ = sm.stats.diagnostic.het_goldfeldquandt(y_train, scaled_tfidf_matrix, idx=None, alternative='two-sided')
+# print(f'p_value: {p_value}') # if small, reject null that we have homoscedasticity
+
+#normality
+# need to get residuals to use sm.qqplot here
+
+
+#multicollinearity
+#variance inflation factor needs to be under 10 (under 5 even better)
+#not sure which column matrix makes sense here. want to test across all columns
+# vif = variance_inflation_factor(scaled_tfidf_matrix, 1)
+# print(f'vif: {vif}')
 
 ##RESULTS
-#without scaling:
-#accuracy=0.787
-#auc = .952
-
-#with standard scaler:
+#with standard scaler, max_iter=1000, multi-class='multinomial'
 #accuracy=0.776
 #auc=0.946

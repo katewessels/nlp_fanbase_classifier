@@ -18,7 +18,7 @@ from nltk import pos_tag
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 from sklearn.metrics.pairwise import linear_kernel
 import operator
-from text_cleaning import get_data, get_X_y, filter_data, filter_data_text
+from text_cleaning import get_data, get_X_y, filter_data_text
 from sklearn.naive_bayes import MultinomialNB
 from sklearn import preprocessing
 from sklearn.model_selection import KFold, train_test_split, cross_val_score
@@ -47,18 +47,27 @@ test_document_tfidf_matrix = tfidf.transform(X_test)
 # X_test_tokens = [filter_data_text(doc) for doc in X_test]
 
 #NAIVE BAYES USING TF COUNT VECTORIZER
+#model
 model = MultinomialNB()
 model.fit(document_tf_matrix, y_train)
-#accuracy score on test data
-accuracy = model.score(test_document_tf_matrix, y_test)
-#predicted classes for test data
+#predict
 y_pred = model.predict(test_document_tf_matrix)
-#predicted probabilities for test data
 y_pred_proba = model.predict_proba(test_document_tf_matrix)
-#roc AUC score
+#metrics
+accuracy = accuracy_score(y_test, y_pred)
+recall = recall_score(y_test, y_pred, average='macro')
+precision = precision_score(y_test, y_pred, average='macro')
 auc = roc_auc_score(y_test, y_pred_proba, multi_class='ovr')
 #classification report
 report = classification_report(y_test, y_pred)
+
+#training subset predict
+train_y_pred = model.predict(document_tfidf_matrix)
+train_y_pred_proba = model.predict_proba(document_tfidf_matrix)
+train_accuracy = accuracy_score(y_train, train_y_pred)
+train_recall = recall_score(y_train, train_y_pred, average='macro')
+train_precision = precision_score(y_train, train_y_pred, average='macro')
+train_auc = roc_auc_score(y_train, train_y_pred_proba, multi_class='ovr')
 
 # #NAIVE BAYES USING TF-IDF VECTORIZER
 # model = MultinomialNB()
@@ -75,15 +84,15 @@ report = classification_report(y_test, y_pred)
 # report = classification_report(y_test, y_pred)
 
 ###CROSS VALIDATE (5 FOLDS)
-precision_scores = cross_val_score(model, document_tf_matrix, y_train, scoring=make_scorer(precision_score, average='macro'))
-accuracy_scores = cross_val_score(model, document_tf_matrix, y_train, scoring=make_scorer(accuracy_score))
-recall_scores = cross_val_score(model, document_tf_matrix, y_train,  scoring=make_scorer(recall_score, average='macro'))
-auc_scores = cross_val_score(model, document_tf_matrix, y_train, scoring='roc_auc_ovr')
+# precision_scores = cross_val_score(model, document_tf_matrix, y_train, scoring=make_scorer(precision_score, average='macro'))
+# accuracy_scores = cross_val_score(model, document_tf_matrix, y_train, scoring=make_scorer(accuracy_score))
+# recall_scores = cross_val_score(model, document_tf_matrix, y_train,  scoring=make_scorer(recall_score, average='macro'))
+# auc_scores = cross_val_score(model, document_tf_matrix, y_train, scoring='roc_auc_ovr')
 
-print(f'Training Mean CV Accuracy: {round(np.mean(accuracy_scores), 5)}')
-print(f'Training Mean CV Precision: {round(np.mean(precision_scores), 5)}')
-print(f'Training Mean CV Recall: {round(np.mean(recall_scores), 5)}')
-print(f'Training Mean CV AUC Score: {round(np.mean(auc_scores), 5)}')
+# print(f'Training Mean CV Accuracy: {round(np.mean(accuracy_scores), 5)}')
+# print(f'Training Mean CV Precision: {round(np.mean(precision_scores), 5)}')
+# print(f'Training Mean CV Recall: {round(np.mean(recall_scores), 5)}')
+# print(f'Training Mean CV AUC Score: {round(np.mean(auc_scores), 5)}')
 
 
 ##RESULTS

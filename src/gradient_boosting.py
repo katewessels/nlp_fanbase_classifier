@@ -34,9 +34,9 @@ X, y = get_X_y(df)
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
 
 #count vectorizer: tf
-tf = CountVectorizer(tokenizer=filter_data_text, max_features=5000)
-document_tf_matrix = tf.fit_transform(X_train).todense()
-test_document_tf_matrix = tf.transform(X_test)
+# tf = CountVectorizer(tokenizer=filter_data_text, max_features=5000)
+# document_tf_matrix = tf.fit_transform(X_train).todense()
+# test_document_tf_matrix = tf.transform(X_test)
 
 #tfidf vectorizer: tf-idf
 tfidf = TfidfVectorizer(tokenizer=filter_data_text, max_features=5000)
@@ -48,16 +48,31 @@ test_document_tfidf_matrix = tfidf.transform(X_test)
 
 ## GRADIENT BOOSTING CLASSIFIER
 #fit
-model = GradientBoostingClassifier(random_state=0)
+model = GradientBoostingClassifier(learning_rate=0.1, max_depth=3, subsample=0.75,
+                                    min_samples_leaf=3, max_features='sqrt', n_estimators=200,
+                                    random_state=1)
 model.fit(document_tfidf_matrix, y_train)
+
+
 #predict
 y_pred = model.predict(test_document_tfidf_matrix)
 y_pred_proba = model.predict_proba(test_document_tfidf_matrix)
 #metrics
 accuracy = accuracy_score(y_test, y_pred)
-recall = recall_score(y_test, y_pred)
-precision = precision_score(y_test, y_pred)
+recall = recall_score(y_test, y_pred, average='macro')
+precision = precision_score(y_test, y_pred, average='macro')
 auc = roc_auc_score(y_test, y_pred_proba, multi_class='ovr')
+#classification report
+report = classification_report(y_test, y_pred)
+
+#training subset predict
+train_y_pred = model.predict(document_tfidf_matrix)
+train_y_pred_proba = model.predict_proba(document_tfidf_matrix)
+train_accuracy = accuracy_score(y_train, train_y_pred)
+train_recall = recall_score(y_train, train_y_pred, average='macro')
+train_precision = precision_score(y_train, train_y_pred, average='macro')
+train_auc = roc_auc_score(y_train, train_y_pred_proba, multi_class='ovr')
+
 
 ###CROSS VALIDATE (default cv: stratified kfold (5-folds), which works for multi class)
 # precision_scores = cross_val_score(model, scaled_tfidf_matrix, y_train, scoring=make_scorer(precision_score, average='macro'))
@@ -69,3 +84,8 @@ auc = roc_auc_score(y_test, y_pred_proba, multi_class='ovr')
 # print(f'Training Mean CV Precision: {round(np.mean(precision_scores), 5)}')
 # print(f'Training Mean CV Recall: {round(np.mean(recall_scores), 5)}')
 # print(f'Training Mean CV AUC Score: {round(np.mean(auc_scores), 5)}')
+
+##RESULTS
+#initial test: learning rate=0.1, subsample=0.5:
+#accuracy: 0.6779, recall: 0.6787, precision: 0.7814, auc: 0.9039
+
