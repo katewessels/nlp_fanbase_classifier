@@ -23,7 +23,7 @@ from sklearn import preprocessing
 from sklearn.model_selection import KFold, train_test_split, cross_val_score, GridSearchCV
 from sklearn.metrics import accuracy_score, precision_score, recall_score, roc_curve, classification_report, roc_auc_score, confusion_matrix
 from sklearn.ensemble import RandomForestClassifier
-
+from sklearn.metrics import log_loss
 ##GET DATA
 #get dataframes
 df_gd, df_pf, df_phish, df_beatles, df = get_data()
@@ -55,21 +55,24 @@ tfidf_df = pd.DataFrame(document_tfidf_matrix, columns=tfidf.get_feature_names()
 
 
 ##RANDOM FOREST GRIDSEARCH
-random_forest_grid = {'max_depth': [3, 6],
-                      'max_features': ['sqrt'],
-                      'min_samples_split': [2, 4],
-                      'min_samples_leaf': [2, 4],
+random_forest_grid = {'max_depth': [None],
+                      'max_features': [35, 70],
+                      'min_samples_split': [6],
+                    #   'min_samples_leaf': [2, 4],
                     #   'bootstrap': [True, False],
-                      'n_estimators': [80],
+                      'n_estimators': [100],
                       'random_state': [1]}
 
 rf_gridsearch = GridSearchCV(RandomForestClassifier(),
                              random_forest_grid,
-                             n_jobs=-1,
+                            #  n_jobs=-1,
                              verbose=True,
-                             cv=2
+                             cv=2,
+                             scoring='neg_log_loss'
                              )
 
 rf_gridsearch.fit(document_tfidf_matrix, y_train)
 
 best_rf_model = rf_gridsearch.best_params_
+
+

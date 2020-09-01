@@ -23,7 +23,7 @@ from sklearn import preprocessing
 from sklearn.model_selection import KFold, train_test_split, cross_val_score, GridSearchCV
 from sklearn.metrics import accuracy_score, precision_score, recall_score, roc_curve, classification_report, roc_auc_score, confusion_matrix
 from sklearn.ensemble import GradientBoostingClassifier
-
+from sklearn.metrics import log_loss
 ##GET DATA
 #get dataframes
 df_gd, df_pf, df_phish, df_beatles, df = get_data()
@@ -55,19 +55,24 @@ tfidf_df = pd.DataFrame(document_tfidf_matrix, columns=tfidf.get_feature_names()
 
 ##GRADIENT BOOSTING CLASSIFIER GRIDSEARCH
 gradient_boosting_grid = {'learning_rate': [0.1],
-                          'max_depth': [3, 6],
-                          'min_samples_leaf': [2, 5],
+                          'max_depth': [6, None],
+                        #   'min_samples_leaf': [2, 5],
                           'max_features': ['sqrt'],
                           'n_estimators': [200],
                           'random_state': [1]}
 
 gb_gridsearch = GridSearchCV(GradientBoostingClassifier(),
                              gradient_boosting_grid,
-                             n_jobs=-1,
+                            #  n_jobs=-1,
                              verbose=True,
-                             cv=2
+                             cv=2,
+                             scoring='neg_log_loss'
                              )
 
 gb_gridsearch.fit(document_tfidf_matrix, y_train)
 
 best_gb_model = gb_gridsearch.best_params_
+
+
+##RESULTS
+#grid search results

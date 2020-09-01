@@ -22,8 +22,8 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import KFold, train_test_split, cross_val_score
 from sklearn.metrics import accuracy_score, precision_score, recall_score, roc_curve, classification_report, roc_auc_score, make_scorer
 from sklearn.preprocessing import StandardScaler
-import statsmodels as sm
-from statsmodels.stats.outliers_influence import variance_inflation_factor
+# import statsmodels as sm
+# from statsmodels.stats.outliers_influence import variance_inflation_factor
 
 #get dataframes
 df_gd, df_pf, df_phish, df_beatles, df = get_data()

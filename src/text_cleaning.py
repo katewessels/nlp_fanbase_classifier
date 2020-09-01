@@ -195,9 +195,15 @@ if __name__ == "__main__":
     #df
     tf_df = pd.DataFrame(document_tf_matrix, columns=tf.get_feature_names())
 
+    #counts of posts with band mentions
+    num_phish_docs = sum(['phish' in doc for doc in X_train_tokens])
+    num_gd_docs = sum(['dead' in doc for doc in X_train_tokens])
+    num_pf_docs = sum(['floyd' in doc for doc in X_train_tokens])
+    num_beatles_docs = sum(['beatl' in doc for doc in X_train_tokens])
     #get top words across all documents/subreddits and plot
     top_words = get_top_n_words(X_train, n=100)
     plot_top_words(top_words, len(X_train), 'Word', 'Word Frequency Per Post', 'Top 15 Words Across Subreddits', 'all_word_freq_graph')
+
 
     #get top words for each individual subreddit and plot
     top_gd_words = get_top_n_words(X_train[y_train=='gratefuldead'], n=100)

@@ -51,9 +51,11 @@ test_document_tfidf_matrix = tfidf.transform(X_test)
 ## NON-NEGATIVE MATRIX FACTORIZATION
 #fit
 #try 10 latent features
+X_train_pf = X_train[y_train=='pinkfloyd']
+tfidf_pf = document_tfidf_matrix[y_train=='pinkfloyd']
 nmf = NMF(n_components=10)
-nmf.fit(document_tfidf_matrix)
-W = nmf.transform(document_tfidf_matrix)
+nmf.fit(tfidf_pf)
+W = nmf.transform(tfidf_pf)
 H = nmf.components_
 print(f'nmf_reconstruction_error: {nmf.reconstruction_err_}')
 
@@ -70,16 +72,16 @@ for i in range(W.shape[0]):
     latent_features.append(np.argmax(W[i, :]))
 latent_features = np.array(latent_features)
 
-lat_0_docs = X_train[latent_features==0]
-lat_1_docs = X_train[latent_features==1]
-lat_2_docs = X_train[latent_features==2]
-lat_3_docs = X_train[latent_features==3]
-lat_4_docs = X_train[latent_features==4]
-lat_5_docs = X_train[latent_features==5]
-lat_6_docs = X_train[latent_features==6]
-lat_7_docs = X_train[latent_features==7]
-lat_8_docs = X_train[latent_features==8]
-lat_9_docs = X_train[latent_features==9]
+lat_0_docs = X_train_pf[latent_features==0]
+lat_1_docs = X_train_pf[latent_features==1]
+lat_2_docs = X_train_pf[latent_features==2]
+lat_3_docs = X_train_pf[latent_features==3]
+lat_4_docs = X_train_pf[latent_features==4]
+lat_5_docs = X_train_pf[latent_features==5]
+lat_6_docs = X_train_pf[latent_features==6]
+lat_7_docs = X_train_pf[latent_features==7]
+lat_8_docs = X_train_pf[latent_features==8]
+lat_9_docs = X_train_pf[latent_features==9]
 
 #get each word's highest weighted latent feature
 tfidf_feature_names = tfidf.get_feature_names()
@@ -103,48 +105,3 @@ lat_9_words = np.array(H_df.columns[latent_features_h==9])
 
 
 
-##-------------------------------------------------
-# #try a model
-# #NAIVE BAYES USING TF COUNT VECTORIZER
-# #transform test data into latent features as well
-# test_W = nmf.transform(test_document_tfidf_matrix)
-# #model
-# model = MultinomialNB()
-# model.fit(W, y_train)
-# #predict
-# y_pred = model.predict(test_W)
-# y_pred_proba = model.predict_proba(test_W)
-# #metrics
-# accuracy = accuracy_score(y_test, y_pred)
-# recall = recall_score(y_test, y_pred, average='macro')
-# precision = precision_score(y_test, y_pred, average='macro')
-# auc = roc_auc_score(y_test, y_pred_proba, multi_class='ovr')
-# #classification report
-# report = classification_report(y_test, y_pred)
-
-
-
-#metrics
-# accuracy = accuracy_score(y_test, y_pred)
-# recall = recall_score(y_test, y_pred, average='macro')
-# precision = precision_score(y_test, y_pred, average='macro')
-# auc = roc_auc_score(y_test, y_pred_proba, multi_class='ovr')
-
-###CROSS VALIDATE (default cv: stratified kfold (5-folds), which works for multi class)
-# precision_scores = cross_val_score(model, scaled_tfidf_matrix, y_train, scoring=make_scorer(precision_score, average='macro'))
-# accuracy_scores = cross_val_score(model, scaled_tfidf_matrix, y_train, scoring=make_scorer(accuracy_score))
-# recall_scores = cross_val_score(model, scaled_tfidf_matrix, y_train, scoring=make_scorer(recall_score, average='macro'))
-# auc_scores = cross_val_score(model, scaled_tfidf_matrix, y_train, scoring='roc_auc_ovr')
-
-# print(f'Training Mean CV Accuracy: {round(np.mean(accuracy_scores), 5)}')
-# print(f'Training Mean CV Precision: {round(np.mean(precision_scores), 5)}')
-# print(f'Training Mean CV Recall: {round(np.mean(recall_scores), 5)}')
-# print(f'Training Mean CV AUC Score: {round(np.mean(auc_scores), 5)}')
-
-
-#RESULTS
-#for 50 latent features:
-#accuracy=.6176
-#precision=0.6595
-#recall=0.6183
-#auc=0.8432

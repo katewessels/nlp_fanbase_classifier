@@ -48,11 +48,11 @@ test_document_tfidf_matrix = tfidf.transform(X_test)
 
 ## GRADIENT BOOSTING CLASSIFIER
 #fit
-model = GradientBoostingClassifier(learning_rate=0.1, max_depth=3, subsample=0.75,
-                                    min_samples_leaf=3, max_features='sqrt', n_estimators=200,
+model = GradientBoostingClassifier(learning_rate=0.1, max_depth=None, subsample=0.5,\
+                                    min_samples_leaf=3, max_features='sqrt', n_estimators=100,\
                                     random_state=1)
-model.fit(document_tfidf_matrix, y_train)
 
+model.fit(document_tfidf_matrix, y_train)
 
 #predict
 y_pred = model.predict(test_document_tfidf_matrix)
@@ -85,7 +85,4 @@ train_auc = roc_auc_score(y_train, train_y_pred_proba, multi_class='ovr')
 # print(f'Training Mean CV Recall: {round(np.mean(recall_scores), 5)}')
 # print(f'Training Mean CV AUC Score: {round(np.mean(auc_scores), 5)}')
 
-##RESULTS
-#initial test: learning rate=0.1, subsample=0.5:
-#accuracy: 0.6779, recall: 0.6787, precision: 0.7814, auc: 0.9039
 

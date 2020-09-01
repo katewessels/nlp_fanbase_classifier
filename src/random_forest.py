@@ -55,9 +55,13 @@ tfidf_df = pd.DataFrame(document_tfidf_matrix, columns=tfidf.get_feature_names()
 
 ## RANDOM FOREST MODEL
 #fit
-model = RandomForestClassifier(n_estimators=80, max_depth=3, min_samples_split=2,
-                              min_samples_leaf=2, max_features='sqrt', n_jobs=-1, random_state=1)
+model = RandomForestClassifier(n_estimators=100, max_depth=None, min_samples_split=6,
+                              max_features='sqrt', n_jobs=-1, random_state=1)
+
+
 model.fit(document_tfidf_matrix, y_train)
+
+
 #predict
 y_pred = model.predict(test_document_tfidf_matrix)
 y_pred_proba = model.predict_proba(test_document_tfidf_matrix)
@@ -82,28 +86,18 @@ feat_scores_array = model.feature_importances_
 feat_scores_df = pd.DataFrame({'Fraction of Samples Affected by Feature' : model.feature_importances_},
                            index=tfidf_df.columns)
 feat_scores = feat_scores_df.sort_values(by='Fraction of Samples Affected by Feature', ascending=False)
-#plot 25 top features
+
+#plot top 30 features
 fig, ax = plt.subplots()
-x_pos = np.arange(len(feat_scores[:25]))
-ax.barh(x_pos, feat_scores['Fraction of Samples Affected by Feature'][:25], align='center')
-plt.yticks(x_pos, feat_scores.index[:25])
+x_pos = np.arange(len(feat_scores[:30]))
+ax.barh(x_pos, feat_scores['Fraction of Samples Affected by Feature'][:30], align='center')
+plt.yticks(x_pos, feat_scores.index[:30])
 ax.set_ylabel('Word')
 ax.set_xlabel('Fraction of Samples Affected')
 ax.set_title('Top Feature Importances')
 plt.gca().invert_yaxis()
-plt.savefig('images/top25_feature_importances.png')
-plt.show()
-#plot next 25 top features
-fig, ax = plt.subplots()
-x_pos = np.arange(len(feat_scores[25:50]))
-ax.barh(x_pos, feat_scores['Fraction of Samples Affected by Feature'][25:50], align='center')
-plt.yticks(x_pos, feat_scores.index[25:50])
-ax.set_ylabel('Word')
-ax.set_xlabel('Fraction of Samples Affected')
-ax.set_title('Top Feature Importances')
-plt.gca().invert_yaxis()
-plt.savefig('images/next25_feature_importances.png')
-plt.show()
+plt.savefig('images/top30_feature_importances.png', bbox_inches = "tight")
+# plt.show()
 
 
 ###CROSS VALIDATE (default cv: stratified kfold (5-folds), which works for multi class)
@@ -117,7 +111,3 @@ plt.show()
 # print(f'Training Mean CV Recall: {round(np.mean(recall_scores), 5)}')
 # print(f'Training Mean CV AUC Score: {round(np.mean(auc_scores), 5)}')
 
-
-#First Run: n_estimators=100
-#accuracy=.7797
-#auc=.945

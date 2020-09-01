@@ -83,6 +83,8 @@ train_auc = roc_auc_score(y_train, train_y_pred_proba, multi_class='ovr')
 # #classification report
 # report = classification_report(y_test, y_pred)
 
+
+
 ###CROSS VALIDATE (5 FOLDS)
 # precision_scores = cross_val_score(model, document_tf_matrix, y_train, scoring=make_scorer(precision_score, average='macro'))
 # accuracy_scores = cross_val_score(model, document_tf_matrix, y_train, scoring=make_scorer(accuracy_score))
@@ -94,12 +96,6 @@ train_auc = roc_auc_score(y_train, train_y_pred_proba, multi_class='ovr')
 # print(f'Training Mean CV Recall: {round(np.mean(recall_scores), 5)}')
 # print(f'Training Mean CV AUC Score: {round(np.mean(auc_scores), 5)}')
 
-
-##RESULTS
-#first run accuracy score: 0.79 (no max features param in tf count vectorizer)
-#second run accuracy score: .78 (tf count vectorizer, limited max features to 5000)
-#third run accuracy score: 0.77 (tfidf vectorizer, limited max features to 5000)
-##--->RUN WITH TF VECTORIZER MOVING FORWARD
 
 
 
