@@ -1,13 +1,10 @@
 # Which Fanbase? 
 A project exploring Natural Language Processing and Text Classification of Reddit posts from four popular band Subreddits.
 
-<img align='left' src="images/gratefuldead_logo.png" width="150" hspace='100'/>
-<img align='left' src="images/phish_logo.png" width="150" hspace='100'/>
-<img align='left' src="images/pinkfloyd_logo.png" width="150" hspace='100'/>
-<img align='left' src="images/beatles_logo.png" width="150" hspace='100'/>
-
-<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
-<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+<img align='left' src="images/gratefuldead_logo.png" width="150" height='150' hspace='100'/>
+<img align='left' src="images/phish_logo.png" width="150" height='150' hspace='100'/>
+<img align='left' src="images/pinkfloyd_logo.png" width="150" height='150' hspace='100'/>
+<img align='left' src="images/beatles_logo.png" width="150" height='150' hspace='100'/>
 
 #### Overview
 This project implemented natural language processing and machine learning models to classify posts from the subreddits of four popular twentieth century bands: The Grateful Dead, Phish, Pink Floyd, and the Beatles. 
@@ -49,7 +46,7 @@ Below is an example of several posts from a single latent feature. Looking throu
 <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
 
 Looking through the posts that were grouped in each latent feature, I labeled the latent features as shown below:
-<img align='center' src="images/latent_features.png" width="950" hspace="100"/>
+<img align='left' src="images/latent_features.png" width="950" hspace="100"/>
 
 
 As shown in the tables, there are overlapping trends across all subreddits, like the latent features focused around band name and specific band memebers.
