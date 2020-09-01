@@ -7,7 +7,7 @@ A project exploring Natural Language Processing and Text Classification of Reddi
 <img align='left' src="images/beatles_logo.png" width="150" height='150' hspace='100'/>
 <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
 
-#### Overview
+# Overview
 This project implemented natural language processing and machine learning models to classify posts from the subreddits of four popular twentieth century bands: The Grateful Dead, Phish, Pink Floyd, and the Beatles. 
 
 #### Questions
@@ -32,11 +32,11 @@ A TF-IDF matrix was created with the tokenized word stems, taking the top 5,000 
 #### Word Frequency
 I began by looking at the most frequent words used in each unique subreddit.
 
-<img align='left' src="images/phish_wordcloud.png" width="200" hspace="100"/>
-<img align='center' src="images/gd_wordcloud.png" width="200" hspace='100'/>
+<img align='left' src="images/phish_wordcloud.png" width="250" hspace="100"/>
+<img align='center' src="images/gd_wordcloud.png" width="250" hspace='100'/>
 
-<img align='left' src="images/beatles_wordcloud.png" width="200" hspace='100'/>
-<img align='center' src="images/pf_wordcloud.png" width="200" hspace='100'/>
+<img align='left' src="images/beatles_wordcloud.png" width="250" hspace='100'/>
+<img align='center' src="images/pf_wordcloud.png" width="250" hspace='100'/>
 
 #### Non-negative Matrix Factorization
 I reduced the feature matrix for each unique subreddit to 10 latent features and looked through the posts within each latent feature to put a name to each latent topic. 
@@ -47,7 +47,7 @@ Below is an example of several posts from a single latent feature. Looking throu
 <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
 
 Looking through the posts that were grouped in each latent feature, I labeled the latent features as shown below:
-<img align='left' src="images/latent_features.png" width="950" hspace="100"/>
+<img align='left' src="images/latent_features.png" width="900" hspace="100"/>
 
 
 As shown in the tables, there are overlapping trends across all subreddits, like the latent features focused around band name and specific band memebers.
