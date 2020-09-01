@@ -32,11 +32,12 @@ A TF-IDF matrix was created with the tokenized word stems, taking the top 5,000 
 #### Word Frequency
 I began by looking at the most frequent words used in each unique subreddit.
 
-<img align='left' src="images/phish_wordcloud.png" width="250" hspace="100"/>
-<img align='center' src="images/gd_wordcloud.png" width="250" hspace='100'/>
+<img align='center' src="images/phish_wordcloud.png" width="300" hspace="100"/>
 
-<img align='left' src="images/beatles_wordcloud.png" width="250" hspace='100'/>
-<img align='center' src="images/pf_wordcloud.png" width="250" hspace='100'/>
+<img align='center' src="images/gd_wordcloud.png" width="300" hspace='100'/>
+
+<img align='center' src="images/beatles_wordcloud.png" width="300" hspace='100'/>
+<img align='center' src="images/pf_wordcloud.png" width="300" hspace='100'/>
 
 #### Non-negative Matrix Factorization
 I reduced the feature matrix for each unique subreddit to 10 latent features and looked through the posts within each latent feature to put a name to each latent topic. 
