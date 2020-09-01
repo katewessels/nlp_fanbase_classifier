@@ -5,6 +5,7 @@ A project exploring Natural Language Processing and Text Classification of Reddi
 <img align='left' src="images/phish_logo.png" width="150" height='150' hspace='100'/>
 <img align='left' src="images/pinkfloyd_logo.png" width="150" height='150' hspace='100'/>
 <img align='left' src="images/beatles_logo.png" width="150" height='150' hspace='100'/>
+<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
 
 #### Overview
 This project implemented natural language processing and machine learning models to classify posts from the subreddits of four popular twentieth century bands: The Grateful Dead, Phish, Pink Floyd, and the Beatles. 
